@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Vector;
+
+import static java.nio.file.StandardOpenOption.CREATE;
 
 public class RandProductMaker extends JFrame {
     //Product product;
@@ -162,14 +165,31 @@ public class RandProductMaker extends JFrame {
 
         Product p = new Product(name, description, ID, cost);
 
-        try {
-            FileWriter writer = new FileWriter("src/randAccessProducts");
+        JFileChooser chooser = new JFileChooser();
+        File selectedFile;
 
-            writer.write(p.toCSVDataRecord(name, description, ID, cost));
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        try {
+            File workingDirectory= new File(System.getProperty("user.dir"));
+            chooser.setCurrentDirectory(workingDirectory);
+
+            //If they selected a file, it will run the code
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                selectedFile = chooser.getSelectedFile();
+                Path file = selectedFile.toPath();
+
+                OutputStream out =
+                        new BufferedOutputStream(Files.newOutputStream(file, CREATE));
+                BufferedWriter writer =
+                        new BufferedWriter(new OutputStreamWriter(out));
+
+                writer.write(p.toCSVDataRecord(name, description, ID, cost));
+                writer.newLine();
+                writer.close();
+            }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         String record = recordCount.getText();
         int count = Integer.valueOf(record.substring(14)) + 1;
