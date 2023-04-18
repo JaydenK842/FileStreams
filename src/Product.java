@@ -19,6 +19,10 @@ public class Product {
         this.name = name;
     }
 
+    public String stripName(String name) {
+        return name.strip();
+    }
+
     public String getDescription() {
         return description;
     }
@@ -27,12 +31,20 @@ public class Product {
         this.description = description;
     }
 
+    public String stripDescription(String description) {
+        return description.strip();
+    }
+
     public String getID() {
         return ID;
     }
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public String stripID(String ID) {
+        return ID.strip();
     }
 
     public double getCost() {
